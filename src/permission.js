@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css' // 引入进度条插件
 // 定义白名单
 const whiteList = ['/login', '/404']
 // 路由导航前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   NProgress.start()// 开启进度条
   if (store.getters.token) {
     // 如果token存在
@@ -14,6 +14,11 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next('/')
     } else {
+      // 如果userId不存在代表用户资料为空 则获取用户资料
+      if (!store.getters.userId) {
+        // console.log('111')
+        await store.dispatch('user/getUserInfo')
+      }
       // 如果不去登录页则放行
       next()
     }

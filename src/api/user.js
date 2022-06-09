@@ -11,11 +11,16 @@ export function login(data) {
 
 // 封装获取 用户基本资料
 export function getUserInfo() {
-  request({
+  return request({
     url: '/sys/profile',
     method: 'POST'
   })
 }
-
+// 封装获取员工基本信息（头像)
+export function getUserBaseInfo(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
+}
 export function logout() {
 }
