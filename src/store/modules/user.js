@@ -1,5 +1,9 @@
 import { getToken, setToken, removeToken } from '@/utils/auth.js'
-import { login } from '@/api/user.js'
+import { login, getUserInfo } from '@/api/user.js'
+const state = {
+  token: getToken(), // 初始化token
+  userInfo: {}// 初始化用户基本资料信息
+}
 const mutations = {
   updateToken(state, token) {
     state.token = token// 修改token
@@ -8,6 +12,12 @@ const mutations = {
   removeToken(state) {
     state.token = null // 清空token
     removeToken() // 清除缓存中  token
+  },
+  setUserInfo(state, data) { //  设置用户信息
+    state.userInfo = data
+  },
+  removeUserInfo(state) { // 删除用户资料
+    state.userInfo = {}
   }
 }
 const actions = {
@@ -17,10 +27,13 @@ const actions = {
     // axios  自动给返回结果加了一层data
     //  如果登录成功则调用修改 token的方法
     context.commit('updateToken', result)
+  },
+  async getUserInfo(context) {
+    const result = await getUserInfo()// 获取返回值
+    // console.log(result)
+    context.commit('setUserInfo', result) // 将整个 的个人信息 设置到用户的vuex数据中
+    return result // 这里  为什么要返回，为后面埋下伏笔
   }
-}
-const state = {
-  token: getToken()
 }
 export default {
   namespaced: true,
